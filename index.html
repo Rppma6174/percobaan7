@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Single Page App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Navigation */
+        nav {
+            background: #2c3e50;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 1rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            background: #3498db;
+            transform: translateY(-2px);
+        }
+
+        /* Content Sections */
+        .content {
+            padding: 2rem;
+            min-height: 600px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Page */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* About Page */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            margin: 0 auto;
+        }
+
+        /* Projects Page */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            background: #3498db;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Skills Page */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .skill-category {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .skill-category h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .skill-bar {
+            margin-bottom: 1rem;
+        }
+
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-progress {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 2s ease-in-out;
+        }
+
+        /* Contact Page */
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #3498db;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 0.2rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <!-- Home Page -->
+            <div id="home" class="page active">
+                <div class="hero">
+                    <h1>Selamat Datang</h1>
+                    <p>Portfolio website menggunakan Single Page Application dengan vanilla JavaScript, HTML, dan CSS. Dibuat untuk keperluan tugas UMT.</p>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <h2>Tentang Website Ini</h2>
+                    <p>Website ini merupakan contoh implementasi SPA (Single Page Application) yang dibuat menggunakan teknologi web fundamental tanpa framework tambahan.</p>
+                </div>
+            </div>
+
+            <!-- About Page -->
+            <div id="about" class="page">
+                <h2>Tentang Saya</h2>
+                <div class="about-content">
+                    <div class="profile-img">👤</div>
+                    <div>
+                        <h3>Mahasiswa UMT</h3>
+                        <p>Saya adalah seorang mahasiswa yang sedang belajar pengembangan web. Website ini dibuat sebagai bagian dari tugas untuk mendemonstrasikan kemampuan dalam membuat Single Page Application menggunakan vanilla JavaScript.</p>
+                        <br>
+                        <p>Saya memiliki ketertarikan dalam bidang web development dan selalu berusaha untuk terus belajar teknologi-teknologi baru dalam dunia programming.</p>
+                        <br>
+                        <p><strong>Jurusan:</strong> Teknik Informatika</p>
+                        <p><strong>Universitas:</strong> Universitas Muhammadiyah Tangerang (UMT)</p>
+                        <p><strong>Semester:</strong> Sedang Berjalan</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects Page -->
+            <div id="projects" class="page">
+                <h2>Proyek Saya</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <h3>Single Page Application</h3>
+                        <p>Website portfolio menggunakan vanilla JavaScript, HTML, dan CSS tanpa framework tambahan. Menerapkan konsep SPA dengan routing client-side.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">HTML</span>
+                            <span class="tech-tag">CSS</span>
+                            <span class="tech-tag">JavaScript</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h3>Website Responsif</h3>
+                        <p>Membuat website yang dapat beradaptasi dengan berbagai ukuran layar menggunakan CSS Grid dan Flexbox.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Responsive Design</span>
+                            <span class="tech-tag">CSS Grid</span>
+                            <span class="tech-tag">Flexbox</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h3>Form Interaktif</h3>
+                        <p>Implementasi form dengan validasi JavaScript dan interaksi yang smooth tanpa reload halaman.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Form Validation</span>
+                            <span class="tech-tag">DOM Manipulation</span>
+                            <span class="tech-tag">Event Handling</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills Page -->
+            <div id="skills" class="page">
+                <h2>Keahlian</h2>
+                <div class="skills-container">
+                    <div class="skill-category">
+                        <h3>Frontend Development</h3>
+                        <div class="skill-bar">
+                            <div class="skill-name">
+                                <span>HTML</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-width="85"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-bar">
+                            <div class="skill-name">
+                                <span>CSS</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-width="80"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-bar">
+                            <div class="skill-name">
+                                <span>JavaScript</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-width="75"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h3>Design & Tools</h3>
+                        <div class="skill-bar">
+                            <div class="skill-name">
+                                <span>Responsive Design</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-width="80"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-bar">
+                            <div class="skill-name">
+                                <span>UI/UX Basics</span>
+                                <span>65%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-width="65"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-bar">
+                            <div class="skill-name">
+                                <span>Git</span>
+                                <span>70%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-width="70"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Page -->
+            <div id="contact" class="page">
+                <h2>Kontak</h2>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <h4>Email</h4>
+                            <p>mahasiswa@umt.ac.id</p>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">📱</div>
+                            <h4>Telepon</h4>
+                            <p>+62 123 456 789</p>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">📍</div>
+                            <h4>Lokasi</h4>
+                            <p>Tangerang, Banten</p>
+                        </div>
+                    </div>
+                    
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Nama:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subjek:</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Pesan:</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        
+                        <button type="submit">Kirim Pesan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SPA Navigation System
+        class SPARouter {
+            constructor() {
+                this.routes = {};
+                this.currentPage = 'home';
+                this.init();
+            }
+
+            init() {
+                // Handle navigation clicks
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const page = link.getAttribute('href').substring(1);
+                        this.navigateTo(page);
+                    });
+                });
+
+                // Handle browser back/forward buttons
+                window.addEventListener('popstate', (e) => {
+                    const page = e.state?.page || 'home';
+                    this.navigateTo(page, false);
+                });
+
+                // Set initial state
+                history.replaceState({page: 'home'}, '', '#home');
+            }
+
+            navigateTo(page, pushState = true) {
+                // Hide current page
+                document.querySelector('.page.active').classList.remove('active');
+                
+                // Show new page
+                document.getElementById(page).classList.add('active');
+                
+                // Update navigation
+                document.querySelector('.nav-link.active').classList.remove('active');
+                document.querySelector(`[href="#${page}"]`).classList.add('active');
+                
+                // Update browser history
+                if (pushState) {
+                    history.pushState({page: page}, '', `#${page}`);
+                }
+                
+                this.currentPage = page;
+                
+                // Trigger page-specific actions
+                this.onPageLoad(page);
+            }
+
+            onPageLoad(page) {
+                switch(page) {
+                    case 'skills':
+                        this.animateSkillBars();
+                        break;
+                    case 'contact':
+                        this.initContactForm();
+                        break;
+                }
+            }
+
+            animateSkillBars() {
+                setTimeout(() => {
+                    document.querySelectorAll('.skill-progress-bar').forEach(bar => {
+                        const width = bar.getAttribute('data-width');
+                        bar.style.width = width + '%';
+                    });
+                }, 100);
+            }
+
+            initContactForm() {
+                const form = document.getElementById('contactForm');
+                if (form && !form.hasListener) {
+                    form.addEventListener('submit', this.handleFormSubmit.bind(this));
+                    form.hasListener = true;
+                }
+            }
+
+            handleFormSubmit(e) {
+                e.preventDefault();
+                
+                // Get form data
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Simulate form submission
+                alert(`Terima kasih ${data.name}! Pesan Anda telah diterima. Ini adalah demo, jadi pesan tidak benar-benar terkirim.`);
+                
+                // Reset form
+                e.target.reset();
+            }
+        }
+
+        // Initialize the SPA when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new SPARouter();
+        });
+
+        // Add some interactive features
+        document.addEventListener('DOMContentLoaded', () => {
+            // Smooth scroll for better UX
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Add loading animation to project cards
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe project cards
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
